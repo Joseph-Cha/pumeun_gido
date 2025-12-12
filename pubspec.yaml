@@ -58,10 +58,11 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # 환경변수 파일
+  # 환경변수 파일 및 아이콘
   assets:
     - .env
     - .env.beta
+    - assets/icons/
 
   # 폰트: 나중에 Pretendard 폰트 파일 추가 시 아래 주석 해제
   fonts:

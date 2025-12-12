@@ -76,7 +76,8 @@ class HomeViewModel extends StateNotifier<HomeState> {
 
   /// 더 불러오기
   Future<void> loadMore() async {
-    if (state.isLoadingMore || !state.hasMore) return;
+    // 새로고침 중이거나 이미 더 불러오는 중이면 중복 호출 방지
+    if (state.isLoading || state.isLoadingMore || !state.hasMore) return;
 
     state = state.copyWith(isLoadingMore: true);
 
@@ -119,7 +120,8 @@ class HomeViewModel extends StateNotifier<HomeState> {
   /// 필터 변경
   void setStatusFilter(PrayerStatus? status) {
     if (state.selectedStatus == status) return;
-    state = state.copyWith(selectedStatus: status);
+    // 필터 변경 시 기존 목록을 비워서 로딩 상태가 일관되게 표시되도록 함
+    state = state.copyWith(selectedStatus: status, prayers: []);
     loadPrayers(refresh: true);
   }
 

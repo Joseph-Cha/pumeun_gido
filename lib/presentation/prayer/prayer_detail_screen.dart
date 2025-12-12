@@ -5,6 +5,7 @@ import '../../core/config/theme/app_colors.dart';
 import '../../core/config/theme/app_text_styles.dart';
 import '../../core/router/app_router.dart';
 import '../../shared/utils/date_utils.dart';
+import '../home/home_view_model.dart';
 import 'prayer_view_model.dart';
 
 /// 기도 제목 상세 화면
@@ -19,14 +20,16 @@ class PrayerDetailScreen extends ConsumerWidget {
     final viewModel = ref.read(prayerViewModelProvider(prayerId).notifier);
 
     return PopScope(
-      canPop: false,
+      canPop: true,
       onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-        context.pop(state.hasChanges);
+        if (didPop && state.hasChanges) {
+          // 스와이프로 뒤로 갈 때 변경사항이 있으면 홈 화면 새로고침을 위해 invalidate
+          ref.invalidate(homeViewModelProvider);
+        }
       },
       child: Scaffold(
         backgroundColor: AppColors.background,
-        appBar: _buildAppBar(context, state, viewModel),
+        appBar: _buildAppBar(context, ref, state, viewModel),
         body: state.isLoading
             ? const Center(child: CircularProgressIndicator())
             : state.prayer == null
@@ -38,6 +41,7 @@ class PrayerDetailScreen extends ConsumerWidget {
 
   PreferredSizeWidget _buildAppBar(
     BuildContext context,
+    WidgetRef ref,
     PrayerState state,
     PrayerViewModel viewModel,
   ) {
@@ -45,7 +49,12 @@ class PrayerDetailScreen extends ConsumerWidget {
       backgroundColor: AppColors.background,
       title: const Text('기도 제목'),
       leading: IconButton(
-        onPressed: () => context.pop(state.hasChanges),
+        onPressed: () {
+          if (state.hasChanges) {
+            ref.invalidate(homeViewModelProvider);
+          }
+          context.pop();
+        },
         icon: const Icon(Icons.arrow_back),
       ),
       actions: [
@@ -57,6 +66,7 @@ class PrayerDetailScreen extends ConsumerWidget {
             );
             if (result == true) {
               viewModel.loadPrayer(prayerId);
+              viewModel.markAsChanged();
             }
           },
           icon: const Icon(Icons.edit_outlined),

@@ -165,4 +165,9 @@ class PrayerViewModel extends StateNotifier<PrayerState> {
       return false;
     }
   }
+
+  /// 변경됨으로 표시
+  void markAsChanged() {
+    state = state.copyWith(hasChanges: true);
+  }
 }

@@ -1,19 +1,79 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- Background -->
-  <rect width="512" height="512" rx="112" fill="#FFFFFF"/>
+  <defs>
+    <!-- 따뜻한 그라데이션 배경 -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAF8F5"/>
+      <stop offset="100%" style="stop-color:#E8DDD4"/>
+    </linearGradient>
 
-  <!-- Volunteer Activism Icon - Hands holding heart -->
-  <g transform="translate(96, 96)" fill="#C4956A">
-    <!-- Heart -->
-    <path d="M160 56c-17.7-22-44.5-36-74.7-36C38.2 20 0 58.2 0 105.3c0 24.5 9.8 47.9 27.3 65.1L160 300l132.7-129.6c17.5-17.2 27.3-40.6 27.3-65.1C320 58.2 281.8 20 234.7 20c-30.2 0-57 14-74.7 36z"/>
+    <!-- 아이콘용 그라데이션 (선택적 깊이감) -->
+    <linearGradient id="iconGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#D4A67D"/>
+      <stop offset="100%" style="stop-color:#C4956A"/>
+    </linearGradient>
+  </defs>
 
-    <!-- Left Hand -->
-    <path d="M40 180c-22 0-40 18-40 40v60c0 22 18 40 40 40h40v-140H40z" opacity="0.9"/>
+  <!-- Background with rounded corners -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGradient)"/>
 
-    <!-- Right Hand -->
-    <path d="M280 180c22 0 40 18 40 40v60c0 22-18 40-40 40h-40v-140h40z" opacity="0.9"/>
+  <!-- 품은 하트 - 양손이 하트를 감싸는 형태 -->
+  <g transform="translate(256, 256) scale(1.2)">
 
-    <!-- Center support -->
-    <path d="M100 250h120v60c0 11-9 20-20 20h-80c-11 0-20-9-20-20v-60z" opacity="0.85"/>
+    <!-- 하트 (중앙) -->
+    <path
+      d="M0 -60
+         C-15 -82, -45 -90, -70 -70
+         C-100 -45, -100 0, -70 35
+         C-45 65, 0 95, 0 95
+         C0 95, 45 65, 70 35
+         C100 0, 100 -45, 70 -70
+         C45 -90, 15 -82, 0 -60Z"
+      fill="#C4956A"
+      transform="translate(0, -15)"
+    />
+
+    <!-- 왼손 (하트를 감싸는) -->
+    <path
+      d="M-130 20
+         C-145 20, -155 35, -155 55
+         L-155 85
+         C-155 100, -145 115, -125 120
+         L-70 135
+         C-50 140, -30 130, -20 115
+         L-20 75
+         C-20 60, -35 50, -55 50
+         L-100 50
+         C-115 50, -125 40, -125 25
+         C-125 15, -130 20, -130 20Z"
+      fill="#C4956A"
+      opacity="0.85"
+    />
+
+    <!-- 왼손 엄지 -->
+    <ellipse cx="-115" cy="30" rx="18" ry="25" fill="#C4956A" opacity="0.9" transform="rotate(-20, -115, 30)"/>
+
+    <!-- 오른손 (하트를 감싸는) -->
+    <path
+      d="M130 20
+         C145 20, 155 35, 155 55
+         L155 85
+         C155 100, 145 115, 125 120
+         L70 135
+         C50 140, 30 130, 20 115
+         L20 75
+         C20 60, 35 50, 55 50
+         L100 50
+         C115 50, 125 40, 125 25
+         C125 15, 130 20, 130 20Z"
+      fill="#C4956A"
+      opacity="0.85"
+    />
+
+    <!-- 오른손 엄지 -->
+    <ellipse cx="115" cy="30" rx="18" ry="25" fill="#C4956A" opacity="0.9" transform="rotate(20, 115, 30)"/>
+
+    <!-- 하트 하이라이트 (빛 반사) -->
+    <ellipse cx="-25" cy="-55" rx="12" ry="16" fill="#FFFFFF" opacity="0.25" transform="rotate(-30, -25, -55)"/>
+
   </g>
 </svg>

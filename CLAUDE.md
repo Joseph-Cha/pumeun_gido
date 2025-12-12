@@ -91,3 +91,27 @@ Files ending in `.freezed.dart` and `.g.dart` are auto-generated. Run `dart run 
 ### Environment Configuration
 - `.env` and `.env.beta` files for Supabase credentials
 - Loaded via `flutter_dotenv` in `AppConfig.loadEnv()`
+
+## Git Workflow
+
+### Commit Guidelines
+각 작업 완료 시 git commit을 남겨주세요.
+
+```bash
+# 커밋 메시지 형식
+git commit -m "#<type>: <description>"
+
+# 타입 종류
+# feat: 새로운 기능 추가
+# fix: 버그 수정
+# refactor: 코드 리팩토링
+# style: UI/스타일 변경
+# docs: 문서 수정
+# chore: 빌드, 설정 파일 변경
+```
+
+### 작업 완료 시 Commit 필수
+- 기능 구현 완료 후 반드시 commit
+- 버그 수정 완료 후 반드시 commit
+- 여러 파일 수정 시 관련 변경사항을 하나의 commit으로 묶기
+- commit 전 `flutter analyze`로 코드 검증 권장

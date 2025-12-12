@@ -39,9 +39,24 @@ class PrayerRepositoryImpl implements IPrayerRepository {
       query = query.eq('requester_id', requesterId);
     }
 
-    // 검색어 필터
+    // 검색어 필터 (사람 이름으로 검색)
     if (searchQuery != null && searchQuery.isNotEmpty) {
-      query = query.ilike('content', '%$searchQuery%');
+      // 먼저 이름으로 requester ID 목록 조회
+      final requesterResponse = await _supabaseService
+          .from('requesters')
+          .select('id')
+          .eq('user_id', _userId!)
+          .ilike('name', '%$searchQuery%');
+
+      final requesterIds = (requesterResponse as List)
+          .map((r) => r['id'] as String)
+          .toList();
+
+      if (requesterIds.isEmpty) {
+        return []; // 검색 결과 없음
+      }
+
+      query = query.inFilter('requester_id', requesterIds);
     }
 
     // 정렬 및 페이지네이션

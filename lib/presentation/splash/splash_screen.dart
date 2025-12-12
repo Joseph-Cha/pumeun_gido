@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/config/theme/app_colors.dart';
 import '../../core/config/theme/app_text_styles.dart';
@@ -69,11 +70,15 @@ class SplashScreen extends ConsumerWidget {
             ),
           ],
         ),
-        child: const Center(
-          child: Icon(
-            Icons.volunteer_activism_rounded,
-            size: 52,
-            color: AppColors.accent,
+        child: Center(
+          child: SvgPicture.asset(
+            'assets/icons/app_icon_symbol.svg',
+            width: 56,
+            height: 56,
+            colorFilter: const ColorFilter.mode(
+              AppColors.accent,
+              BlendMode.srcIn,
+            ),
           ),
         ),
       ),

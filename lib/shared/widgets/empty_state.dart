@@ -54,9 +54,9 @@ class EmptyState extends StatelessWidget {
     VoidCallback? onClear,
   }) {
     return EmptyState(
-      icon: Icons.search_off_rounded,
-      title: "'$query'에 대한 결과가 없어요",
-      subtitle: '다른 검색어로 시도해보세요',
+      icon: Icons.person_search_rounded,
+      title: "'$query'님을 찾을 수 없어요",
+      subtitle: '다른 이름으로 검색해보세요',
       actionLabel: '전체 목록 보기',
       onAction: onClear,
     );

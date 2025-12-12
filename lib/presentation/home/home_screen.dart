@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/config/theme/app_colors.dart';
 import '../../core/config/theme/app_text_styles.dart';
@@ -128,10 +129,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   color: AppColors.secondaryLight,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(
-                  Icons.volunteer_activism_rounded,
-                  size: 20,
-                  color: AppColors.accent,
+                child: Center(
+                  child: SvgPicture.asset(
+                    'assets/icons/app_icon_symbol.svg',
+                    width: 22,
+                    height: 22,
+                    colorFilter: const ColorFilter.mode(
+                      AppColors.accent,
+                      BlendMode.srcIn,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(width: 10),
@@ -182,12 +189,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             });
           },
           decoration: InputDecoration(
-            hintText: '기도 제목 검색',
+            hintText: '사람 검색',
             hintStyle: AppTextStyles.bodyMedium.copyWith(
               color: AppColors.textTertiary,
             ),
             prefixIcon: const Icon(
-              Icons.search_rounded,
+              Icons.person_search_rounded,
               color: AppColors.textTertiary,
               size: 22,
             ),
