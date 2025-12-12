@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="112" fill="#FFFFFF"/>
+
+  <!-- Volunteer Activism Icon - Hands holding heart -->
+  <g transform="translate(96, 96)" fill="#C4956A">
+    <!-- Heart -->
+    <path d="M160 56c-17.7-22-44.5-36-74.7-36C38.2 20 0 58.2 0 105.3c0 24.5 9.8 47.9 27.3 65.1L160 300l132.7-129.6c17.5-17.2 27.3-40.6 27.3-65.1C320 58.2 281.8 20 234.7 20c-30.2 0-57 14-74.7 36z"/>
+
+    <!-- Left Hand -->
+    <path d="M40 180c-22 0-40 18-40 40v60c0 22 18 40 40 40h40v-140H40z" opacity="0.9"/>
+
+    <!-- Right Hand -->
+    <path d="M280 180c22 0 40 18 40 40v60c0 22-18 40-40 40h-40v-140h40z" opacity="0.9"/>
+
+    <!-- Center support -->
+    <path d="M100 250h120v60c0 11-9 20-20 20h-80c-11 0-20-9-20-20v-60z" opacity="0.85"/>
+  </g>
+</svg>
