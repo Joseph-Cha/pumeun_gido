@@ -301,15 +301,11 @@ class LoginScreen extends ConsumerWidget {
           ),
         ),
         GestureDetector(
-          onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('이용약관 페이지가 준비 중입니다.'),
-                behavior: SnackBarBehavior.floating,
-                margin: EdgeInsets.all(16),
-              ),
-            );
-          },
+          onTap: () => _openWebView(
+            context,
+            title: '이용약관',
+            url: 'https://humdrum-sheet-942.notion.site/2c7bcd10e0ac807eb962d8ba72bae94d',
+          ),
           child: Text(
             '이용약관',
             style: AppTextStyles.caption.copyWith(
@@ -325,15 +321,11 @@ class LoginScreen extends ConsumerWidget {
           ),
         ),
         GestureDetector(
-          onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('개인정보 처리방침 페이지가 준비 중입니다.'),
-                behavior: SnackBarBehavior.floating,
-                margin: EdgeInsets.all(16),
-              ),
-            );
-          },
+          onTap: () => _openWebView(
+            context,
+            title: '개인정보 처리방침',
+            url: 'https://humdrum-sheet-942.notion.site/2c7bcd10e0ac809bb965da6cb6035fdd',
+          ),
           child: Text(
             '개인정보 처리방침',
             style: AppTextStyles.caption.copyWith(
@@ -349,6 +341,17 @@ class LoginScreen extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void _openWebView(
+    BuildContext context, {
+    required String title,
+    required String url,
+  }) {
+    context.push(
+      AppRoutes.webview,
+      extra: {'title': title, 'url': url},
     );
   }
 }
