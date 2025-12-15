@@ -1,5 +1,9 @@
 # 품은기도 (Pumeun Gido)
 
+![License](https://img.shields.io/badge/license-Proprietary-red)
+![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android-blue)
+![Flutter](https://img.shields.io/badge/Flutter-3.9+-02569B?logo=flutter)
+
 지인의 기도 제목을 마음에 품고 기도하는 앱
 
 ## 소개
@@ -222,8 +226,16 @@ dart run flutter_launcher_icons
 
 ## 라이선스
 
-이 프로젝트는 MIT 라이선스 하에 배포됩니다.
+**Copyright (c) 2025 JC. All Rights Reserved.**
+
+이 프로젝트는 **독점 라이선스(Proprietary License)** 하에 보호됩니다.
+
+- 무단 복제, 수정, 배포, 판매 금지
+- 역공학, 디컴파일, 역어셈블 금지
+- 사전 서면 허가 없이 상업적 사용 금지
+
+자세한 내용은 [LICENSE](./LICENSE) 파일을 참조하세요.
 
 ## 문의
 
-프로젝트에 대한 문의사항이 있으시면 이슈를 등록해 주세요.
+라이선스 관련 문의 또는 프로젝트에 대한 질문이 있으시면 이슈를 등록해 주세요.

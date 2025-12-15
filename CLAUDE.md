@@ -250,3 +250,15 @@ git commit -m "#<type>: <description>"
 - `docs/앱 스토어 제출 항목.md` - App Store submission checklist
 - `docs/PRIVACY_POLICY.md` - Privacy policy
 - `docs/TERMS_OF_SERVICE.md` - Terms of service
+
+## License
+
+**Copyright (c) 2025 JC. All Rights Reserved.**
+
+This project is protected under a **Proprietary License**.
+
+- NO copying, modifying, distributing, or selling
+- NO reverse engineering, decompiling, or disassembling
+- NO commercial use without prior written permission
+
+See [LICENSE](./LICENSE) for details.
