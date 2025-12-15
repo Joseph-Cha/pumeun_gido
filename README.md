@@ -204,7 +204,6 @@ dart run flutter_launcher_icons
 | `--no-codesign` | 코드 서명 스킵 (테스트용, 배포 불가) |
 
 **빌드 결과물:**
-- 프로젝트: `archive/ios/`
 - Xcode Organizer: `~/Library/Developer/Xcode/Archives/YYYY-MM-DD/`
 
 > **참고:** iOS 빌드는 macOS에서만 가능합니다. 빌드 완료 후 Xcode > Window > Organizer에서 Archive를 선택하여 App Store Connect에 업로드할 수 있습니다.
