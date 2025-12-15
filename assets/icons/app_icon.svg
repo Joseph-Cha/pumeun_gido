@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <!-- 따뜻한 그라데이션 배경 -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAF8F5"/>
+      <stop offset="100%" style="stop-color:#E8DDD4"/>
+    </linearGradient>
+
+    <!-- 아이콘용 그라데이션 (선택적 깊이감) -->
+    <linearGradient id="iconGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#D4A67D"/>
+      <stop offset="100%" style="stop-color:#C4956A"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background with rounded corners -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGradient)"/>
+
+  <!-- 품은 하트 - 양손이 하트를 감싸는 형태 -->
+  <g transform="translate(256, 256) scale(1.2)">
+
+    <!-- 하트 (중앙) -->
+    <path
+      d="M0 -60
+         C-15 -82, -45 -90, -70 -70
+         C-100 -45, -100 0, -70 35
+         C-45 65, 0 95, 0 95
+         C0 95, 45 65, 70 35
+         C100 0, 100 -45, 70 -70
+         C45 -90, 15 -82, 0 -60Z"
+      fill="#C4956A"
+      transform="translate(0, -15)"
+    />
+
+    <!-- 왼손 (하트를 감싸는) -->
+    <path
+      d="M-130 20
+         C-145 20, -155 35, -155 55
+         L-155 85
+         C-155 100, -145 115, -125 120
+         L-70 135
+         C-50 140, -30 130, -20 115
+         L-20 75
+         C-20 60, -35 50, -55 50
+         L-100 50
+         C-115 50, -125 40, -125 25
+         C-125 15, -130 20, -130 20Z"
+      fill="#C4956A"
+      opacity="0.85"
+    />
+
+    <!-- 왼손 엄지 -->
+    <ellipse cx="-115" cy="30" rx="18" ry="25" fill="#C4956A" opacity="0.9" transform="rotate(-20, -115, 30)"/>
+
+    <!-- 오른손 (하트를 감싸는) -->
+    <path
+      d="M130 20
+         C145 20, 155 35, 155 55
+         L155 85
+         C155 100, 145 115, 125 120
+         L70 135
+         C50 140, 30 130, 20 115
+         L20 75
+         C20 60, 35 50, 55 50
+         L100 50
+         C115 50, 125 40, 125 25
+         C125 15, 130 20, 130 20Z"
+      fill="#C4956A"
+      opacity="0.85"
+    />
+
+    <!-- 오른손 엄지 -->
+    <ellipse cx="115" cy="30" rx="18" ry="25" fill="#C4956A" opacity="0.9" transform="rotate(20, 115, 30)"/>
+
+    <!-- 하트 하이라이트 (빛 반사) -->
+    <ellipse cx="-25" cy="-55" rx="12" ry="16" fill="#FFFFFF" opacity="0.25" transform="rotate(-30, -25, -55)"/>
+
+  </g>
+</svg>

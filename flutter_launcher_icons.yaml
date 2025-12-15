@@ -1,0 +1,20 @@
+flutter_launcher_icons:
+  # Android 설정
+  android: true
+  image_path: "assets/icons/app_icon.png"
+
+  # Android Adaptive Icon (Android 8.0+)
+  adaptive_icon_background: "#FAF8F5"
+  adaptive_icon_foreground: "assets/icons/app_icon.png"
+  adaptive_icon_round: true
+
+  # iOS 설정
+  ios: true
+  remove_alpha_ios: true
+
+  # 최소 SDK 버전
+  min_sdk_android: 21
+
+  # Web (필요시)
+  web:
+    generate: false
