@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/services/supabase_service.dart';
 import '../../data/services/auth_service.dart';
+import '../../data/services/analytics_service.dart';
 import '../../data/models/user_model.dart';
 
 /// Supabase Service Provider
@@ -33,4 +34,9 @@ final currentUserProvider = StreamProvider<UserModel?>((ref) {
 final isLoggedInProvider = Provider<bool>((ref) {
   final authService = ref.watch(authServiceProvider);
   return authService.isLoggedIn;
+});
+
+/// Analytics Service Provider
+final analyticsServiceProvider = Provider<AnalyticsService>((ref) {
+  return AnalyticsService();
 });

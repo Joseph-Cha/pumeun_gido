@@ -7,6 +7,7 @@ import '../../presentation/prayer/prayer_detail_screen.dart';
 import '../../presentation/prayer/prayer_form_screen.dart';
 import '../../presentation/people/people_list_screen.dart';
 import '../../presentation/settings/settings_screen.dart';
+import '../../presentation/settings/webview_screen.dart';
 
 /// 라우트 경로 상수
 abstract class AppRoutes {
@@ -18,6 +19,7 @@ abstract class AppRoutes {
   static const String people = '/people';
   static const String personPrayers = '/people/:id/prayers';
   static const String settings = '/settings';
+  static const String webview = '/webview';
 }
 
 /// GoRouter Provider
@@ -70,6 +72,16 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.settings,
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.webview,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, String>?;
+          return WebViewScreen(
+            title: extra?['title'] ?? '',
+            url: extra?['url'] ?? '',
+          );
+        },
       ),
     ],
   );

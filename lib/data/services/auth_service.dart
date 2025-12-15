@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io' show Platform;
+import 'dart:math';
+import 'package:crypto/crypto.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/config/app_config.dart';
 import '../models/user_model.dart';
@@ -104,19 +108,159 @@ class AuthService {
     }
   }
 
-  /// 사용자 프로필 저장/업데이트
-  Future<void> _upsertUserProfile(
-      User user, GoogleSignInAccount googleUser) async {
+  /// Apple 로그인
+  Future<AuthResponse?> signInWithApple() async {
     try {
+      print('[AuthService] Apple 로그인 시작');
+
+      // nonce 생성 (보안을 위한 랜덤 문자열)
+      final rawNonce = _generateNonce();
+      final hashedNonce = sha256.convert(utf8.encode(rawNonce)).toString();
+
+      // Apple 로그인 요청
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+        nonce: hashedNonce,
+      );
+
+      print('[AuthService] Apple 인증 정보 획득');
+
+      final idToken = credential.identityToken;
+      if (idToken == null) {
+        throw Exception('Apple ID 토큰을 가져올 수 없습니다.');
+      }
+
+      print('[AuthService] Supabase signInWithIdToken 호출 (Apple)');
+
+      // Supabase에 로그인
+      final response = await _supabaseService.client.auth.signInWithIdToken(
+        provider: OAuthProvider.apple,
+        idToken: idToken,
+        nonce: rawNonce,
+      );
+
+      print('[AuthService] Supabase 로그인 성공: ${response.user?.id}');
+
+      // 사용자 프로필 저장/업데이트
+      if (response.user != null) {
+        await _upsertAppleUserProfile(response.user!, credential);
+        await _loadCurrentUser();
+      }
+
+      return response;
+    } catch (e, stackTrace) {
+      print('[AuthService] Apple 로그인 에러: $e');
+      print('[AuthService] 스택트레이스: $stackTrace');
+      rethrow;
+    }
+  }
+
+  /// Nonce 생성 (Apple 로그인용)
+  String _generateNonce([int length = 32]) {
+    const charset =
+        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+    final random = Random.secure();
+    return List.generate(length, (_) => charset[random.nextInt(charset.length)])
+        .join();
+  }
+
+  /// Apple 사용자 프로필 저장/업데이트
+  Future<void> _upsertAppleUserProfile(
+      User user, AuthorizationCredentialAppleID credential) async {
+    try {
+      // 기존 사용자 정보 조회 (deleted_at 포함)
+      final existingUser = await _supabaseService
+          .from('users')
+          .select('name, deleted_at')
+          .eq('id', user.id)
+          .maybeSingle();
+
+      // 탈퇴한 사용자인지 확인
+      final isDeletedUser = existingUser?['deleted_at'] != null;
+
+      // Apple은 최초 로그인 시에만 이름 제공
+      String? newName;
+      if (credential.givenName != null || credential.familyName != null) {
+        newName =
+            '${credential.familyName ?? ''}${credential.givenName ?? ''}'.trim();
+      }
+
+      // 탈퇴한 사용자면 새로 가입하는 것처럼 처리 (이름 초기화)
+      // 기존 활성 사용자이고 이름이 '사용자'가 아니면 유지
+      final existingName = existingUser?['name'] as String?;
+      final finalName = (!isDeletedUser && existingName != null && existingName != '사용자')
+          ? existingName
+          : (newName?.isNotEmpty == true ? newName : '사용자');
+
       await _supabaseService.from('users').upsert({
         'id': user.id,
-        'email': user.email ?? googleUser.email,
-        'name': googleUser.displayName ?? '사용자',
-        'avatar_url': googleUser.photoUrl,
+        'email': user.email ?? credential.email,
+        'name': finalName,
+        'deleted_at': null, // 탈퇴 상태 초기화
         'updated_at': DateTime.now().toIso8601String(),
       });
     } catch (e) {
       // 프로필 저장 실패해도 로그인은 성공
+    }
+  }
+
+  /// 사용자 프로필 저장/업데이트
+  Future<void> _upsertUserProfile(
+      User user, GoogleSignInAccount googleUser) async {
+    try {
+      // 기존 사용자 정보 조회 (deleted_at 포함)
+      final existingUser = await _supabaseService
+          .from('users')
+          .select('name, deleted_at')
+          .eq('id', user.id)
+          .maybeSingle();
+
+      // 탈퇴한 사용자인지 확인
+      final isDeletedUser = existingUser?['deleted_at'] != null;
+
+      // 탈퇴한 사용자면 새로 가입하는 것처럼 처리 (이름 초기화)
+      // 기존 활성 사용자이고 이름이 '사용자'가 아니면 유지
+      final existingName = existingUser?['name'] as String?;
+      final finalName = (!isDeletedUser && existingName != null && existingName != '사용자')
+          ? existingName
+          : (googleUser.displayName ?? '사용자');
+
+      await _supabaseService.from('users').upsert({
+        'id': user.id,
+        'email': user.email ?? googleUser.email,
+        'name': finalName,
+        'avatar_url': googleUser.photoUrl,
+        'deleted_at': null, // 탈퇴 상태 초기화
+        'updated_at': DateTime.now().toIso8601String(),
+      });
+    } catch (e) {
+      // 프로필 저장 실패해도 로그인은 성공
+    }
+  }
+
+  /// 사용자 이름 업데이트
+  Future<void> updateUserName(String newName) async {
+    try {
+      final userId = currentUserId;
+      if (userId == null) throw Exception('로그인이 필요합니다.');
+
+      await _supabaseService.from('users').update({
+        'name': newName,
+        'updated_at': DateTime.now().toIso8601String(),
+      }).eq('id', userId);
+
+      // 캐시된 사용자 정보 업데이트
+      if (_currentUser != null) {
+        _setCurrentUser(_currentUser!.copyWith(
+          name: newName,
+          updatedAt: DateTime.now(),
+        ));
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -179,9 +323,21 @@ class AuthService {
       final userId = currentUserId;
       if (userId == null) throw Exception('로그인이 필요합니다.');
 
-      // Soft delete: users 테이블에 deleted_at 설정
+      final deletedAt = DateTime.now().toIso8601String();
+
+      // 1. prayer_requests 테이블 soft delete
+      await _supabaseService.from('prayer_requests').update({
+        'deleted_at': deletedAt,
+      }).eq('user_id', userId);
+
+      // 2. requesters 테이블 soft delete
+      await _supabaseService.from('requesters').update({
+        'deleted_at': deletedAt,
+      }).eq('user_id', userId);
+
+      // 3. users 테이블 soft delete
       await _supabaseService.from('users').update({
-        'deleted_at': DateTime.now().toIso8601String(),
+        'deleted_at': deletedAt,
       }).eq('id', userId);
 
       // Google 로그아웃

@@ -5,6 +5,7 @@ import '../../core/config/app_config.dart';
 import '../../core/config/theme/app_colors.dart';
 import '../../core/config/theme/app_text_styles.dart';
 import '../../data/models/prayer_request_model.dart';
+import '../../data/services/ad_service.dart';
 import 'prayer_view_model.dart';
 
 /// 기도 제목 추가/수정 화면
@@ -397,6 +398,8 @@ class _PrayerFormScreenState extends ConsumerState<PrayerFormScreen> {
       return;
     }
 
+    final isNewPrayer = !viewModel.isEditMode;
+
     final success = await viewModel.save(
       requesterName: requesterName,
       content: content,
@@ -404,16 +407,23 @@ class _PrayerFormScreenState extends ConsumerState<PrayerFormScreen> {
     );
 
     if (success && mounted) {
-      context.pop(true);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            viewModel.isEditMode ? '기도 제목이 수정되었어요' : '기도 제목이 추가되었어요',
+      // 새 기도 제목 추가 시에만 전면 광고 표시 (5개마다)
+      if (isNewPrayer) {
+        await AdService().onPrayerSaved();
+      }
+
+      if (mounted) {
+        context.pop(true);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              viewModel.isEditMode ? '기도 제목이 수정되었어요' : '기도 제목이 추가되었어요',
+            ),
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.all(16),
           ),
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
-        ),
-      );
+        );
+      }
     }
   }
 

@@ -20,7 +20,9 @@ mixin _$SettingsState {
   bool get isLoading => throw _privateConstructorUsedError;
   bool get isLoggedOut => throw _privateConstructorUsedError;
   bool get isAccountDeleted => throw _privateConstructorUsedError;
+  bool get isNameUpdated => throw _privateConstructorUsedError;
   String get errorMessage => throw _privateConstructorUsedError;
+  String get successMessage => throw _privateConstructorUsedError;
 
   /// Create a copy of SettingsState
   /// with the given fields replaced by the non-null parameter values.
@@ -40,7 +42,9 @@ abstract class $SettingsStateCopyWith<$Res> {
     bool isLoading,
     bool isLoggedOut,
     bool isAccountDeleted,
+    bool isNameUpdated,
     String errorMessage,
+    String successMessage,
   });
 }
 
@@ -62,7 +66,9 @@ class _$SettingsStateCopyWithImpl<$Res, $Val extends SettingsState>
     Object? isLoading = null,
     Object? isLoggedOut = null,
     Object? isAccountDeleted = null,
+    Object? isNameUpdated = null,
     Object? errorMessage = null,
+    Object? successMessage = null,
   }) {
     return _then(
       _value.copyWith(
@@ -78,9 +84,17 @@ class _$SettingsStateCopyWithImpl<$Res, $Val extends SettingsState>
                 ? _value.isAccountDeleted
                 : isAccountDeleted // ignore: cast_nullable_to_non_nullable
                       as bool,
+            isNameUpdated: null == isNameUpdated
+                ? _value.isNameUpdated
+                : isNameUpdated // ignore: cast_nullable_to_non_nullable
+                      as bool,
             errorMessage: null == errorMessage
                 ? _value.errorMessage
                 : errorMessage // ignore: cast_nullable_to_non_nullable
+                      as String,
+            successMessage: null == successMessage
+                ? _value.successMessage
+                : successMessage // ignore: cast_nullable_to_non_nullable
                       as String,
           )
           as $Val,
@@ -101,7 +115,9 @@ abstract class _$$SettingsStateImplCopyWith<$Res>
     bool isLoading,
     bool isLoggedOut,
     bool isAccountDeleted,
+    bool isNameUpdated,
     String errorMessage,
+    String successMessage,
   });
 }
 
@@ -122,7 +138,9 @@ class __$$SettingsStateImplCopyWithImpl<$Res>
     Object? isLoading = null,
     Object? isLoggedOut = null,
     Object? isAccountDeleted = null,
+    Object? isNameUpdated = null,
     Object? errorMessage = null,
+    Object? successMessage = null,
   }) {
     return _then(
       _$SettingsStateImpl(
@@ -138,9 +156,17 @@ class __$$SettingsStateImplCopyWithImpl<$Res>
             ? _value.isAccountDeleted
             : isAccountDeleted // ignore: cast_nullable_to_non_nullable
                   as bool,
+        isNameUpdated: null == isNameUpdated
+            ? _value.isNameUpdated
+            : isNameUpdated // ignore: cast_nullable_to_non_nullable
+                  as bool,
         errorMessage: null == errorMessage
             ? _value.errorMessage
             : errorMessage // ignore: cast_nullable_to_non_nullable
+                  as String,
+        successMessage: null == successMessage
+            ? _value.successMessage
+            : successMessage // ignore: cast_nullable_to_non_nullable
                   as String,
       ),
     );
@@ -154,7 +180,9 @@ class _$SettingsStateImpl implements _SettingsState {
     this.isLoading = false,
     this.isLoggedOut = false,
     this.isAccountDeleted = false,
+    this.isNameUpdated = false,
     this.errorMessage = '',
+    this.successMessage = '',
   });
 
   @override
@@ -168,11 +196,17 @@ class _$SettingsStateImpl implements _SettingsState {
   final bool isAccountDeleted;
   @override
   @JsonKey()
+  final bool isNameUpdated;
+  @override
+  @JsonKey()
   final String errorMessage;
+  @override
+  @JsonKey()
+  final String successMessage;
 
   @override
   String toString() {
-    return 'SettingsState(isLoading: $isLoading, isLoggedOut: $isLoggedOut, isAccountDeleted: $isAccountDeleted, errorMessage: $errorMessage)';
+    return 'SettingsState(isLoading: $isLoading, isLoggedOut: $isLoggedOut, isAccountDeleted: $isAccountDeleted, isNameUpdated: $isNameUpdated, errorMessage: $errorMessage, successMessage: $successMessage)';
   }
 
   @override
@@ -186,8 +220,12 @@ class _$SettingsStateImpl implements _SettingsState {
                 other.isLoggedOut == isLoggedOut) &&
             (identical(other.isAccountDeleted, isAccountDeleted) ||
                 other.isAccountDeleted == isAccountDeleted) &&
+            (identical(other.isNameUpdated, isNameUpdated) ||
+                other.isNameUpdated == isNameUpdated) &&
             (identical(other.errorMessage, errorMessage) ||
-                other.errorMessage == errorMessage));
+                other.errorMessage == errorMessage) &&
+            (identical(other.successMessage, successMessage) ||
+                other.successMessage == successMessage));
   }
 
   @override
@@ -196,7 +234,9 @@ class _$SettingsStateImpl implements _SettingsState {
     isLoading,
     isLoggedOut,
     isAccountDeleted,
+    isNameUpdated,
     errorMessage,
+    successMessage,
   );
 
   /// Create a copy of SettingsState
@@ -213,7 +253,9 @@ abstract class _SettingsState implements SettingsState {
     final bool isLoading,
     final bool isLoggedOut,
     final bool isAccountDeleted,
+    final bool isNameUpdated,
     final String errorMessage,
+    final String successMessage,
   }) = _$SettingsStateImpl;
 
   @override
@@ -223,7 +265,11 @@ abstract class _SettingsState implements SettingsState {
   @override
   bool get isAccountDeleted;
   @override
+  bool get isNameUpdated;
+  @override
   String get errorMessage;
+  @override
+  String get successMessage;
 
   /// Create a copy of SettingsState
   /// with the given fields replaced by the non-null parameter values.

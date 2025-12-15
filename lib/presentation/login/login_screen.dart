@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -41,7 +42,7 @@ class LoginScreen extends ConsumerWidget {
               const Spacer(flex: 2),
               _buildHeader(),
               const Spacer(flex: 2),
-              _buildLoginButton(context, state, viewModel),
+              _buildLoginButtons(context, state, viewModel),
               const SizedBox(height: 24),
               _buildTermsText(context),
               const SizedBox(height: 32),
@@ -166,11 +167,69 @@ class LoginScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLoginButton(
+  Widget _buildLoginButtons(
     BuildContext context,
     LoginState state,
     LoginViewModel viewModel,
   ) {
+    return Column(
+      children: [
+        // Apple 로그인 (iOS만)
+        if (Platform.isIOS) ...[
+          _buildAppleLoginButton(state, viewModel),
+          const SizedBox(height: 12),
+        ],
+        // Google 로그인
+        _buildGoogleLoginButton(state, viewModel),
+      ],
+    );
+  }
+
+  Widget _buildAppleLoginButton(LoginState state, LoginViewModel viewModel) {
+    return SizedBox(
+      width: double.infinity,
+      height: 56,
+      child: ElevatedButton(
+        onPressed: state.isLoading ? null : viewModel.signInWithApple,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+        child: state.isLoading
+            ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.apple,
+                    size: 24,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Apple로 시작하기',
+                    style: AppTextStyles.buttonMedium.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+      ),
+    );
+  }
+
+  Widget _buildGoogleLoginButton(LoginState state, LoginViewModel viewModel) {
     return SizedBox(
       width: double.infinity,
       height: 56,

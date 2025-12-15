@@ -4,7 +4,9 @@ import '../../data/models/prayer_request_model.dart';
 import '../../data/models/requester_model.dart';
 import '../../data/repositories/interfaces/i_prayer_repository.dart';
 import '../../data/repositories/interfaces/i_requester_repository.dart';
+import '../../data/services/analytics_service.dart';
 import '../../core/di/repository_providers.dart';
+import '../../core/di/providers.dart';
 
 part 'prayer_view_model.freezed.dart';
 
@@ -28,18 +30,21 @@ final prayerViewModelProvider = StateNotifierProvider.autoDispose
     .family<PrayerViewModel, PrayerState, String?>((ref, prayerId) {
   final prayerRepository = ref.watch(prayerRepositoryProvider);
   final requesterRepository = ref.watch(requesterRepositoryProvider);
-  return PrayerViewModel(prayerRepository, requesterRepository, prayerId);
+  final analyticsService = ref.watch(analyticsServiceProvider);
+  return PrayerViewModel(prayerRepository, requesterRepository, analyticsService, prayerId);
 });
 
 /// Prayer ViewModel
 class PrayerViewModel extends StateNotifier<PrayerState> {
   final IPrayerRepository _prayerRepository;
   final IRequesterRepository _requesterRepository;
+  final AnalyticsService _analyticsService;
   final String? prayerId;
 
   PrayerViewModel(
     this._prayerRepository,
     this._requesterRepository,
+    this._analyticsService,
     this.prayerId,
   ) : super(const PrayerState()) {
     _loadInitialData();
@@ -115,6 +120,8 @@ class PrayerViewModel extends StateNotifier<PrayerState> {
           category: state.selectedCategory,
           memo: memo?.trim().isNotEmpty == true ? memo!.trim() : null,
         );
+        // Analytics: 기도 수정 이벤트
+        _analyticsService.logUpdatePrayer();
       } else {
         await _prayerRepository.create(
           requesterId: requester.id,
@@ -122,6 +129,8 @@ class PrayerViewModel extends StateNotifier<PrayerState> {
           category: state.selectedCategory,
           memo: memo?.trim().isNotEmpty == true ? memo!.trim() : null,
         );
+        // Analytics: 기도 생성 이벤트
+        _analyticsService.logCreatePrayer(category: state.selectedCategory.name);
       }
 
       state = state.copyWith(isSaving: false);
@@ -144,6 +153,8 @@ class PrayerViewModel extends StateNotifier<PrayerState> {
     state = state.copyWith(isSaving: true);
     try {
       await _prayerRepository.delete(state.prayer!.id);
+      // Analytics: 기도 삭제 이벤트
+      _analyticsService.logDeletePrayer();
       state = state.copyWith(isSaving: false);
       return true;
     } catch (e) {
@@ -158,6 +169,12 @@ class PrayerViewModel extends StateNotifier<PrayerState> {
 
     try {
       final updated = await _prayerRepository.toggleStatus(state.prayer!.id);
+      // Analytics: 기도 상태 변경 이벤트
+      if (updated.isAnswered) {
+        _analyticsService.logAnswerPrayer();
+      } else {
+        _analyticsService.logRevertPrayer();
+      }
       state = state.copyWith(prayer: updated, hasChanges: true);
       return updated.isAnswered;
     } catch (e) {

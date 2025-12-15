@@ -52,6 +52,38 @@ class AppConfig {
       dotenv.env['GOOGLE_IOS_CLIENT_ID'] ?? '';
 
   // ─────────────────────────────────────────────────────────────────────────
+  // AdMob 설정 (환경변수에서 로드)
+  // ─────────────────────────────────────────────────────────────────────────
+
+  /// Android 배너 광고 ID
+  static String get admobAndroidBannerId =>
+      dotenv.env['ADMOB_ANDROID_BANNER_ID'] ?? '';
+
+  /// Android 전면 광고 ID
+  static String get admobAndroidInterstitialId =>
+      dotenv.env['ADMOB_ANDROID_INTERSTITIAL_ID'] ?? '';
+
+  /// iOS 배너 광고 ID
+  static String get admobIosBannerId =>
+      dotenv.env['ADMOB_IOS_BANNER_ID'] ?? '';
+
+  /// iOS 전면 광고 ID
+  static String get admobIosInterstitialId =>
+      dotenv.env['ADMOB_IOS_INTERSTITIAL_ID'] ?? '';
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Firebase 설정 (환경변수에서 로드)
+  // ─────────────────────────────────────────────────────────────────────────
+
+  /// Firebase Android API 키
+  static String get firebaseAndroidApiKey =>
+      dotenv.env['FIREBASE_ANDROID_API_KEY'] ?? '';
+
+  /// Firebase iOS API 키
+  static String get firebaseIosApiKey =>
+      dotenv.env['FIREBASE_IOS_API_KEY'] ?? '';
+
+  // ─────────────────────────────────────────────────────────────────────────
   // 앱 정보
   // ─────────────────────────────────────────────────────────────────────────
 

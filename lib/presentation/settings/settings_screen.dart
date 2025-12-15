@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/config/theme/app_colors.dart';
 import '../../core/config/theme/app_text_styles.dart';
 import '../../core/router/app_router.dart';
 import '../../data/models/user_model.dart';
+import '../../shared/widgets/banner_ad_widget.dart';
 import 'settings_view_model.dart';
 
 /// 설정 화면
@@ -28,6 +30,16 @@ class SettingsScreen extends ConsumerWidget {
             margin: const EdgeInsets.all(16),
           ),
         );
+      } else if (next.successMessage.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.successMessage),
+            backgroundColor: AppColors.primary,
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.all(16),
+          ),
+        );
+        viewModel.resetNameUpdatedFlag();
       }
     });
 
@@ -36,75 +48,91 @@ class SettingsScreen extends ConsumerWidget {
       appBar: _buildAppBar(),
       body: state.isLoading
           ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildProfileSection(viewModel.currentUser),
-                  const SizedBox(height: 24),
-                  _buildSection(
-                    title: '계정',
-                    children: [
-                      _buildMenuItem(
-                        icon: Icons.logout_rounded,
-                        title: '로그아웃',
-                        onTap: () => _showLogoutDialog(context, viewModel),
-                      ),
-                      _buildMenuItem(
-                        icon: Icons.person_remove_outlined,
-                        title: '회원 탈퇴',
-                        onTap: () => _showDeleteAccountDialog(context, viewModel),
-                        isDestructive: true,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  _buildSection(
-                    title: '정보',
-                    children: [
-                      _buildMenuItem(
-                        icon: Icons.info_outline_rounded,
-                        title: '앱 정보',
-                        onTap: () => _showAppInfo(context),
-                      ),
-                      _buildMenuItem(
-                        icon: Icons.privacy_tip_outlined,
-                        title: '개인정보처리방침',
-                        onTap: () => _openUrl('https://example.com/privacy'),
-                        showArrow: true,
-                      ),
-                      _buildMenuItem(
-                        icon: Icons.description_outlined,
-                        title: '이용약관',
-                        onTap: () => _openUrl('https://example.com/terms'),
-                        showArrow: true,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  _buildSection(
-                    title: '지원',
-                    children: [
-                      _buildMenuItem(
-                        icon: Icons.mail_outline_rounded,
-                        title: '문의하기',
-                        onTap: () => _openUrl('mailto:support@example.com'),
-                        showArrow: true,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 40),
-                  Center(
-                    child: Text(
-                      '품은기도 v1.0.0',
-                      style: AppTextStyles.caption.copyWith(
-                        color: AppColors.textTertiary,
-                      ),
+          : Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildProfileSection(context, viewModel, viewModel.currentUser),
+                        const SizedBox(height: 24),
+                        _buildSection(
+                          title: '계정',
+                          children: [
+                            _buildMenuItem(
+                              icon: Icons.logout_rounded,
+                              title: '로그아웃',
+                              onTap: () => _showLogoutDialog(context, viewModel),
+                            ),
+                            _buildMenuItem(
+                              icon: Icons.person_remove_outlined,
+                              title: '회원 탈퇴',
+                              onTap: () => _showDeleteAccountDialog(context, viewModel),
+                              isDestructive: true,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        _buildSection(
+                          title: '정보',
+                          children: [
+                            _buildMenuItem(
+                              icon: Icons.info_outline_rounded,
+                              title: '앱 정보',
+                              onTap: () => _showAppInfo(context),
+                            ),
+                            _buildMenuItem(
+                              icon: Icons.privacy_tip_outlined,
+                              title: '개인정보처리방침',
+                              onTap: () => _openWebView(
+                                context,
+                                title: '개인정보처리방침',
+                                url: 'https://humdrum-sheet-942.notion.site/2c7bcd10e0ac809bb965da6cb6035fdd',
+                              ),
+                              showArrow: true,
+                            ),
+                            _buildMenuItem(
+                              icon: Icons.description_outlined,
+                              title: '이용약관',
+                              onTap: () => _openWebView(
+                                context,
+                                title: '이용약관',
+                                url: 'https://humdrum-sheet-942.notion.site/2c7bcd10e0ac807eb962d8ba72bae94d',
+                              ),
+                              showArrow: true,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        _buildSection(
+                          title: '지원',
+                          children: [
+                            _buildMenuItem(
+                              icon: Icons.mail_outline_rounded,
+                              title: '문의하기',
+                              onTap: () => _launchEmail(context, 'the.joseph.c.90@gmail.com'),
+                              showArrow: true,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 40),
+                        Center(
+                          child: Text(
+                            '품은기도 v1.0.0',
+                            style: AppTextStyles.caption.copyWith(
+                              color: AppColors.textTertiary,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 40),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 40),
-                ],
-              ),
+                ),
+                // 하단 배너 광고
+                const BannerAdWidget(),
+              ],
             ),
     );
   }
@@ -119,8 +147,11 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildProfileSection(UserModel? user) {
-
+  Widget _buildProfileSection(
+    BuildContext context,
+    SettingsViewModel viewModel,
+    UserModel? user,
+  ) {
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 16, 20, 0),
       padding: const EdgeInsets.all(20),
@@ -160,11 +191,24 @@ class SettingsScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  user?.name ?? '사용자',
-                  style: AppTextStyles.titleLarge.copyWith(
-                    color: AppColors.textPrimary,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      user?.name ?? '사용자',
+                      style: AppTextStyles.titleLarge.copyWith(
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () => _showEditNameDialog(context, viewModel, user?.name ?? ''),
+                      child: Icon(
+                        Icons.edit_outlined,
+                        size: 18,
+                        color: AppColors.textTertiary,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -332,8 +376,118 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  void _openUrl(String url) {
-    // TODO: url_launcher 의존성 추가 후 구현
-    debugPrint('Opening URL: $url');
+  void _showEditNameDialog(
+    BuildContext context,
+    SettingsViewModel viewModel,
+    String currentName,
+  ) {
+    final controller = TextEditingController(text: currentName);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('이름 변경'),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: InputDecoration(
+            hintText: '이름을 입력하세요',
+            hintStyle: AppTextStyles.bodyLarge.copyWith(
+              color: AppColors.textTertiary,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.border),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.border),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.primary, width: 2),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
+            ),
+          ),
+          style: AppTextStyles.bodyLarge,
+          maxLength: 20,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              '취소',
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              final newName = controller.text.trim();
+              if (newName.isNotEmpty && newName != currentName) {
+                Navigator.pop(context);
+                viewModel.updateName(newName);
+              } else if (newName.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('이름을 입력해주세요'),
+                    behavior: SnackBarBehavior.floating,
+                    margin: EdgeInsets.all(16),
+                  ),
+                );
+              } else {
+                Navigator.pop(context);
+              }
+            },
+            child: Text(
+              '변경',
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _openWebView(
+    BuildContext context, {
+    required String title,
+    required String url,
+  }) {
+    context.push(
+      AppRoutes.webview,
+      extra: {'title': title, 'url': url},
+    );
+  }
+
+  Future<void> _launchEmail(BuildContext context, String email) async {
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
+      path: email,
+      queryParameters: {
+        'subject': '[품은기도] 문의사항',
+      },
+    );
+
+    try {
+      await launchUrl(emailUri);
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('이메일 앱을 열 수 없습니다: $email'),
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.all(16),
+          ),
+        );
+      }
+    }
   }
 }

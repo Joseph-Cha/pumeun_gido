@@ -2,7 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../data/models/requester_model.dart';
 import '../../data/repositories/interfaces/i_requester_repository.dart';
+import '../../data/services/analytics_service.dart';
 import '../../core/di/repository_providers.dart';
+import '../../core/di/providers.dart';
 
 part 'people_view_model.freezed.dart';
 
@@ -22,14 +24,16 @@ class PeopleState with _$PeopleState {
 final peopleViewModelProvider =
     StateNotifierProvider.autoDispose<PeopleViewModel, PeopleState>((ref) {
   final repository = ref.watch(requesterRepositoryProvider);
-  return PeopleViewModel(repository);
+  final analyticsService = ref.watch(analyticsServiceProvider);
+  return PeopleViewModel(repository, analyticsService);
 });
 
 /// People ViewModel
 class PeopleViewModel extends StateNotifier<PeopleState> {
   final IRequesterRepository _repository;
+  final AnalyticsService _analyticsService;
 
-  PeopleViewModel(this._repository) : super(const PeopleState()) {
+  PeopleViewModel(this._repository, this._analyticsService) : super(const PeopleState()) {
     loadRequesters();
   }
 
@@ -101,6 +105,8 @@ class PeopleViewModel extends StateNotifier<PeopleState> {
   Future<bool> editRequester(String id, String newName) async {
     try {
       await _repository.update(id, newName);
+      // Analytics: 요청자 수정 이벤트
+      _analyticsService.logUpdateRequester();
       await loadRequesters();
       return true;
     } catch (e) {
@@ -121,6 +127,8 @@ class PeopleViewModel extends StateNotifier<PeopleState> {
 
     try {
       await _repository.delete(requester.id);
+      // Analytics: 요청자 삭제 이벤트
+      _analyticsService.logDeleteRequester();
       await loadRequesters();
       return true;
     } catch (e) {

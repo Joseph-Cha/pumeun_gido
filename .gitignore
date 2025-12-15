@@ -50,8 +50,15 @@ app.*.map.json
 .env.local
 .env.*.local
 
+# Firebase configuration files (contains API keys)
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+
 # Keystore and signing configuration
 .keystore/
 android/key.properties
 .mcp.json
 .metadata
+
+# Build archives (release builds)
+/archive/
