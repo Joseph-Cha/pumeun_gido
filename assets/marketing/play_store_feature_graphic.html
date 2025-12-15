@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1024, height=500">
+    <title>품은기도 - Play Store Feature Graphic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8B7355;
+            --accent: #C4956A;
+            --background: #FAF8F5;
+            --background-warm: #F5F0E8;
+            --text-dark: #4A3F35;
+            --text-medium: #6B5D4D;
+            --success: #7A9E7E;
+        }
+
+        body {
+            width: 1024px;
+            height: 500px;
+            overflow: hidden;
+            font-family: 'Noto Serif KR', serif;
+        }
+
+        .container {
+            width: 1024px;
+            height: 500px;
+            background: linear-gradient(135deg, var(--background) 0%, var(--background-warm) 50%, #EDE6DC 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Subtle radial glow for spiritual depth */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: 100px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(ellipse at center, rgba(196, 149, 106, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* Soft bottom shadow */
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(to top, rgba(139, 115, 85, 0.08), transparent);
+            pointer-events: none;
+        }
+
+        /* Left content area */
+        .content {
+            flex: 1;
+            padding: 40px 50px 40px 70px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* App logo */
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(145deg, #F5EDE3 0%, #EDE3D5 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow:
+                0 4px 12px rgba(139, 115, 85, 0.15),
+                inset 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .logo-icon svg {
+            width: 40px;
+            height: 40px;
+        }
+
+        .app-name {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -0.02em;
+        }
+
+        /* Main headline */
+        .headline {
+            margin-bottom: 20px;
+        }
+
+        .headline h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.4;
+            letter-spacing: -0.02em;
+        }
+
+        .headline h1 span {
+            color: var(--accent);
+            position: relative;
+        }
+
+        .headline h1 span::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), rgba(196, 149, 106, 0.3));
+            border-radius: 2px;
+        }
+
+        /* Feature list */
+        .features {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .feature-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(139, 115, 85, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .feature-icon svg {
+            width: 20px;
+            height: 20px;
+            color: var(--primary);
+        }
+
+        .feature-text {
+            font-size: 17px;
+            color: var(--text-medium);
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        /* Right phone mockup area */
+        .phone-area {
+            width: 380px;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-right: 40px;
+        }
+
+        /* Phone frame */
+        .phone-frame {
+            width: 220px;
+            height: 440px;
+            background: #1A1A1A;
+            border-radius: 36px;
+            padding: 8px;
+            box-shadow:
+                0 25px 60px rgba(74, 63, 53, 0.25),
+                0 10px 25px rgba(74, 63, 53, 0.15),
+                inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+            transform: perspective(1000px) rotateY(-8deg) rotateX(2deg);
+        }
+
+        .phone-frame::before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 20px;
+            background: #000;
+            border-radius: 10px;
+            z-index: 10;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: var(--background);
+            border-radius: 28px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .phone-screen img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+        }
+
+        /* Decorative elements */
+        .deco-circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+
+        .deco-circle-1 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(196, 149, 106, 0.12) 0%, transparent 70%);
+            top: -60px;
+            left: -40px;
+        }
+
+        .deco-circle-2 {
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(122, 158, 126, 0.1) 0%, transparent 70%);
+            bottom: 40px;
+            left: 30%;
+        }
+
+        /* Subtle pattern overlay */
+        .pattern-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(circle at 20% 80%, rgba(139, 115, 85, 0.03) 1px, transparent 1px),
+                radial-gradient(circle at 80% 20%, rgba(139, 115, 85, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+        }
+
+        /* Floating prayer icons */
+        .floating-icon {
+            position: absolute;
+            opacity: 0.15;
+        }
+
+        .floating-icon-1 {
+            top: 30px;
+            right: 320px;
+            transform: rotate(-15deg);
+        }
+
+        .floating-icon-2 {
+            bottom: 60px;
+            right: 350px;
+            transform: rotate(10deg) scale(0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Decorative elements -->
+        <div class="deco-circle deco-circle-1"></div>
+        <div class="deco-circle deco-circle-2"></div>
+        <div class="pattern-overlay"></div>
+
+        <!-- Floating decorative icons -->
+        <svg class="floating-icon floating-icon-1" width="40" height="40" viewBox="0 0 24 24" fill="none">
+            <path d="M12 21C12 21 3 13.5 3 8.5C3 5.42 5.42 3 8.5 3C10.24 3 11.91 3.81 13 5.08C14.09 3.81 15.76 3 17.5 3C20.58 3 23 5.42 23 8.5C23 13.5 14 21 14 21" stroke="#8B7355" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+
+        <svg class="floating-icon floating-icon-2" width="36" height="36" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="9" stroke="#C4956A" stroke-width="1.5"/>
+            <path d="M12 7V12L15 15" stroke="#C4956A" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+
+        <!-- Left content -->
+        <div class="content">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 48 48" fill="none">
+                        <!-- Two hands embracing a heart -->
+                        <path d="M24 38C24 38 10 28 10 20C10 14.5 14.5 10 20 10C22.5 10 24.8 11.2 26.5 13C28.2 11.2 30.5 10 33 10C38.5 10 43 14.5 43 20C43 28 29 38 29 38" fill="#C4956A" opacity="0.3"/>
+                        <path d="M24 34C24 34 13 26 13 19C13 14.6 16.6 11 21 11C23 11 24.9 11.9 26.2 13.4C27.5 11.9 29.4 11 31.4 11C35.8 11 39.4 14.6 39.4 19C39.4 26 28.4 34 28.4 34" fill="#C4956A"/>
+                        <!-- Left hand -->
+                        <path d="M8 22C6 20 5 18 5 16C5 14 6 12 8 12C10 12 12 14 12 16L14 24" stroke="#8B7355" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                        <path d="M14 24C12 26 10 28 10 30C10 32 12 34 14 34L18 32" stroke="#8B7355" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                        <!-- Right hand -->
+                        <path d="M40 22C42 20 43 18 43 16C43 14 42 12 40 12C38 12 36 14 36 16L34 24" stroke="#8B7355" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                        <path d="M34 24C36 26 38 28 38 30C38 32 36 34 34 34L30 32" stroke="#8B7355" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                    </svg>
+                </div>
+                <span class="app-name">품은기도</span>
+            </div>
+
+            <div class="headline">
+                <h1>지인의 기도 제목을<br><span>마음에 품고</span> 기도해요</h1>
+            </div>
+
+            <div class="features">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <span class="feature-text">사람별로 기도 제목 정리</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                    </div>
+                    <span class="feature-text">기도 응답 기록</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <path d="M21 12a9 9 0 1 1-9-9"/>
+                            <path d="M21 3v6h-6"/>
+                            <path d="M21 9l-6-6"/>
+                        </svg>
+                    </div>
+                    <span class="feature-text">어디서든 동기화</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right phone mockup -->
+        <div class="phone-area">
+            <div class="phone-frame">
+                <div class="phone-screen">
+                    <img src="../screen_shots/home.jpeg" alt="품은기도 앱 화면">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
