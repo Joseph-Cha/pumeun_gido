@@ -18,9 +18,17 @@
 - **중보 대상 관리**: 기도 요청자(지인) 정보 관리
 - **소셜 로그인**: Google / Apple 계정으로 간편 로그인
 
-## 스크린샷
+## 앱 미리보기
 
-<!-- 앱 스크린샷 추가 예정 -->
+<div align="center">
+
+<a href="./assets/marketing/demo_v1.mp4">
+  <img src="./assets/marketing/play_store_feature_graphic.png" alt="품은기도 데모 영상" width="500">
+  <br>
+  <sub>▲ 클릭하여 데모 영상 보기</sub>
+</a>
+
+</div>
 
 ## 기술 스택
 
