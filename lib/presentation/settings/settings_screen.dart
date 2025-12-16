@@ -130,8 +130,11 @@ class SettingsScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
-                // 하단 배너 광고
-                const BannerAdWidget(),
+                // 하단 배너 광고 (SafeArea로 시스템 네비게이션 바 영역 확보)
+                SafeArea(
+                  top: false,
+                  child: const BannerAdWidget(),
+                ),
               ],
             ),
     );
