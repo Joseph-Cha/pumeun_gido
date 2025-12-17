@@ -32,9 +32,6 @@ VERSION_NAME=$(echo $VERSION | cut -d'+' -f1)
 BUILD_NUMBER=$(echo $VERSION | cut -d'+' -f2)
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
-# archive 디렉토리
-ARCHIVE_DIR="$PROJECT_ROOT/archive/ios"
-
 # Xcode Archives 디렉토리 (Organizer에서 보이게 하기 위함)
 XCODE_ARCHIVES_DIR="$HOME/Library/Developer/Xcode/Archives/$(date +%Y-%m-%d)"
 
@@ -123,51 +120,43 @@ echo -e "  ✓ .env (배포용) 확인됨"
 echo ""
 
 # ============================================================================
-# 2. Archive 디렉토리 생성
-# ============================================================================
-echo -e "${YELLOW}[2/8] Archive 디렉토리 준비 중...${NC}"
-mkdir -p "$ARCHIVE_DIR"
-echo -e "  ✓ $ARCHIVE_DIR"
-echo ""
-
-# ============================================================================
-# 3. Clean (선택적)
+# 2. Clean (선택적)
 # ============================================================================
 if [ "$DO_CLEAN" = true ]; then
-    echo -e "${YELLOW}[3/8] 프로젝트 클린 중...${NC}"
+    echo -e "${YELLOW}[2/7] 프로젝트 클린 중...${NC}"
     flutter clean
     echo -e "  ✓ Clean 완료"
     echo ""
 else
-    echo -e "${YELLOW}[3/8] Clean 스킵${NC}"
+    echo -e "${YELLOW}[2/7] Clean 스킵${NC}"
     echo ""
 fi
 
 # ============================================================================
-# 4. 의존성 설치
+# 3. 의존성 설치
 # ============================================================================
-echo -e "${YELLOW}[4/8] 의존성 설치 중...${NC}"
+echo -e "${YELLOW}[3/7] 의존성 설치 중...${NC}"
 flutter pub get
 echo -e "  ✓ 의존성 설치 완료"
 echo ""
 
 # ============================================================================
-# 5. 코드 생성 (freezed, riverpod_generator 등)
+# 4. 코드 생성 (freezed, riverpod_generator 등)
 # ============================================================================
 if [ "$SKIP_GEN" = true ]; then
-    echo -e "${YELLOW}[5/8] 코드 생성 스킵${NC}"
+    echo -e "${YELLOW}[4/7] 코드 생성 스킵${NC}"
     echo ""
 else
-    echo -e "${YELLOW}[5/8] 코드 생성 중...${NC}"
+    echo -e "${YELLOW}[4/7] 코드 생성 중...${NC}"
     dart run build_runner build --delete-conflicting-outputs
     echo -e "  ✓ 코드 생성 완료"
     echo ""
 fi
 
 # ============================================================================
-# 6. CocoaPods 설치
+# 5. CocoaPods 설치
 # ============================================================================
-echo -e "${YELLOW}[6/8] CocoaPods 설치 중...${NC}"
+echo -e "${YELLOW}[5/7] CocoaPods 설치 중...${NC}"
 cd ios
 pod install --repo-update
 cd ..
@@ -175,9 +164,9 @@ echo -e "  ✓ CocoaPods 설치 완료"
 echo ""
 
 # ============================================================================
-# 7. 빌드
+# 6. 빌드
 # ============================================================================
-echo -e "${YELLOW}[7/8] iOS 빌드 중...${NC}"
+echo -e "${YELLOW}[6/7] iOS 빌드 중...${NC}"
 
 # 빌드 시작 시간
 BUILD_START=$(date +%s)
@@ -198,18 +187,16 @@ echo -e "  ✓ iOS 빌드 완료"
 echo ""
 
 # ============================================================================
-# 8. Archive 및 결과물 정리
+# 7. Xcode Archive 생성
 # ============================================================================
-echo -e "${YELLOW}[8/8] 빌드 결과물 정리 중...${NC}"
+echo -e "${YELLOW}[7/7] Xcode Archive 생성 중...${NC}"
 
-IPA_ARCHIVED=""
 XCARCHIVE_PATH=""
 
 if [ "$DO_ARCHIVE" = true ]; then
-    echo -e "  → Xcode Archive 생성 중..."
-
     XCARCHIVE_NAME="${APP_NAME}_v${VERSION_NAME}_${BUILD_NUMBER}_${TIMESTAMP}.xcarchive"
-    XCARCHIVE_PATH="${ARCHIVE_DIR}/${XCARCHIVE_NAME}"
+    mkdir -p "$XCODE_ARCHIVES_DIR"
+    XCARCHIVE_PATH="${XCODE_ARCHIVES_DIR}/${XCARCHIVE_NAME}"
 
     if [ "$NO_CODESIGN" = true ]; then
         # 코드 서명 없이 Archive (테스트용)
@@ -244,22 +231,10 @@ if [ "$DO_ARCHIVE" = true ]; then
 
     if [ -d "$XCARCHIVE_PATH" ]; then
         echo -e "  ✓ Xcode Archive 생성 완료"
-
-        # Xcode Organizer에서 보이도록 Archives 폴더에 복사
-        echo -e "  → Xcode Organizer에 등록 중..."
-        mkdir -p "$XCODE_ARCHIVES_DIR"
-        XCODE_ARCHIVE_DEST="${XCODE_ARCHIVES_DIR}/${XCARCHIVE_NAME}"
-        cp -R "$XCARCHIVE_PATH" "$XCODE_ARCHIVE_DEST"
-        echo -e "  ✓ Xcode Organizer에 등록 완료"
+        echo -e "  ✓ Xcode Organizer에 등록됨"
     fi
-fi
-
-# Runner.app 복사
-RUNNER_APP_SRC="build/ios/iphoneos/Runner.app"
-if [ -d "$RUNNER_APP_SRC" ]; then
-    RUNNER_APP_DEST="${ARCHIVE_DIR}/${APP_NAME}_v${VERSION_NAME}_${BUILD_NUMBER}_${TIMESTAMP}.app"
-    cp -R "$RUNNER_APP_SRC" "$RUNNER_APP_DEST"
-    echo -e "  ✓ Runner.app 복사 완료"
+else
+    echo -e "  Archive 스킵 (--no-archive 옵션)"
 fi
 
 echo ""
@@ -277,17 +252,8 @@ echo ""
 if [ -n "$XCARCHIVE_PATH" ] && [ -d "$XCARCHIVE_PATH" ]; then
     ARCHIVE_SIZE=$(du -sh "$XCARCHIVE_PATH" | cut -f1)
     echo -e "  ${GREEN}Xcode Archive:${NC}"
-    echo -e "    프로젝트: $XCARCHIVE_PATH"
-    echo -e "    Organizer: $XCODE_ARCHIVE_DEST"
+    echo -e "    경로: $XCARCHIVE_PATH"
     echo -e "    크기: $ARCHIVE_SIZE"
-    echo ""
-fi
-
-if [ -d "$RUNNER_APP_DEST" ]; then
-    APP_SIZE=$(du -sh "$RUNNER_APP_DEST" | cut -f1)
-    echo -e "  ${GREEN}Runner.app:${NC}"
-    echo -e "    경로: $RUNNER_APP_DEST"
-    echo -e "    크기: $APP_SIZE"
     echo ""
 fi
 

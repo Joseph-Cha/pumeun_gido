@@ -30,7 +30,16 @@ cd "$PROJECT_ROOT"
 APP_NAME="pumeun_gido"
 VERSION=$(grep "^version:" pubspec.yaml | sed 's/version: //' | tr -d '[:space:]')
 VERSION_NAME=$(echo $VERSION | cut -d'+' -f1)
-BUILD_NUMBER=$(echo $VERSION | cut -d'+' -f2)
+OLD_BUILD_NUMBER=$(echo $VERSION | cut -d'+' -f2)
+
+# 빌드 번호 자동 증가
+BUILD_NUMBER=$((OLD_BUILD_NUMBER + 1))
+NEW_VERSION="${VERSION_NAME}+${BUILD_NUMBER}"
+
+# pubspec.yaml 업데이트
+sed -i '' "s/^version: .*/version: ${NEW_VERSION}/" pubspec.yaml
+echo -e "${GREEN}빌드 번호 증가: ${OLD_BUILD_NUMBER} → ${BUILD_NUMBER}${NC}"
+
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
 # archive 디렉토리

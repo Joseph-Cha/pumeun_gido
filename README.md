@@ -18,9 +18,17 @@
 - **중보 대상 관리**: 기도 요청자(지인) 정보 관리
 - **소셜 로그인**: Google / Apple 계정으로 간편 로그인
 
-## 스크린샷
+## 앱 미리보기
 
-<!-- 앱 스크린샷 추가 예정 -->
+<div align="center">
+
+<a href="./assets/marketing/demo_v1.mp4">
+  <img src="./assets/marketing/play_store_feature_graphic.png" alt="품은기도 데모 영상" width="500">
+  <br>
+  <sub>▲ 클릭하여 데모 영상 보기</sub>
+</a>
+
+</div>
 
 ## 기술 스택
 
@@ -204,7 +212,6 @@ dart run flutter_launcher_icons
 | `--no-codesign` | 코드 서명 스킵 (테스트용, 배포 불가) |
 
 **빌드 결과물:**
-- 프로젝트: `archive/ios/`
 - Xcode Organizer: `~/Library/Developer/Xcode/Archives/YYYY-MM-DD/`
 
 > **참고:** iOS 빌드는 macOS에서만 가능합니다. 빌드 완료 후 Xcode > Window > Organizer에서 Archive를 선택하여 App Store Connect에 업로드할 수 있습니다.

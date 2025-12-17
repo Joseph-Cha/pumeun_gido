@@ -1,7 +1,7 @@
 name: pumeun_gido
 description: "품은기도 - 지인의 기도 제목을 마음에 품고 기도하는 앱"
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ^3.9.2

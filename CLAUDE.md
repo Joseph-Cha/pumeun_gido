@@ -71,7 +71,7 @@ dart run flutter_launcher_icons
 
 ### Build Output
 - Android: `archive/android/pumeun_gido_v{version}_{build}_{timestamp}.aab`
-- iOS: `archive/ios/` + `~/Library/Developer/Xcode/Archives/` (Organizer)
+- iOS: `~/Library/Developer/Xcode/Archives/YYYY-MM-DD/` (Xcode Organizer)
 
 ## Architecture
 
