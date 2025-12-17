@@ -26,20 +26,51 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 cd "$PROJECT_ROOT"
 
-# 앱 정보 추출
-APP_NAME="pumeun_gido"
-VERSION=$(grep "^version:" pubspec.yaml | sed 's/version: //' | tr -d '[:space:]')
-VERSION_NAME=$(echo $VERSION | cut -d'+' -f1)
-OLD_BUILD_NUMBER=$(echo $VERSION | cut -d'+' -f2)
+# ============================================================================
+# version.json에서 버전 정보 읽기 및 빌드 번호 증가
+# ============================================================================
+VERSION_FILE="$PROJECT_ROOT/version.json"
 
-# 빌드 번호 자동 증가
-BUILD_NUMBER=$((OLD_BUILD_NUMBER + 1))
-NEW_VERSION="${VERSION_NAME}+${BUILD_NUMBER}"
+if [ ! -f "$VERSION_FILE" ]; then
+    echo -e "${RED}오류: version.json 파일이 없습니다.${NC}"
+    exit 1
+fi
+
+# Python을 사용하여 JSON 파싱 및 업데이트
+VERSION_INFO=$(python3 << EOF
+import json
+
+with open('$VERSION_FILE', 'r') as f:
+    data = json.load(f)
+
+# Android 버전 정보
+version_name = data['android']['versionName']
+old_build_number = data['android']['buildNumber']
+new_build_number = old_build_number + 1
+
+# 빌드 번호 증가
+data['android']['buildNumber'] = new_build_number
+
+# version.json 업데이트
+with open('$VERSION_FILE', 'w') as f:
+    json.dump(data, f, indent=2)
+    f.write('\n')
+
+print(f"{version_name},{old_build_number},{new_build_number}")
+EOF
+)
+
+VERSION_NAME=$(echo "$VERSION_INFO" | cut -d',' -f1)
+OLD_BUILD_NUMBER=$(echo "$VERSION_INFO" | cut -d',' -f2)
+BUILD_NUMBER=$(echo "$VERSION_INFO" | cut -d',' -f3)
 
 # pubspec.yaml 업데이트
+NEW_VERSION="${VERSION_NAME}+${BUILD_NUMBER}"
 sed -i '' "s/^version: .*/version: ${NEW_VERSION}/" pubspec.yaml
 echo -e "${GREEN}빌드 번호 증가: ${OLD_BUILD_NUMBER} → ${BUILD_NUMBER}${NC}"
 
+# 앱 정보
+APP_NAME="pumeun_gido"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
 # archive 디렉토리
